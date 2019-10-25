@@ -39,7 +39,7 @@ function draw() {
   ctx.font = "30px Comic Sans MS";
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
-  ctx.fillText("(" + (mouseX/scale-4).toFixed(2) + ", " + (mouseY/scale-2).toFixed(2) + ")", mouseX, mouseY);     // fix this coordinate
+  ctx.fillText("(" + (mouseX/scale-4).toFixed(2) + ", " + (-1*mouseY/scale+8).toFixed(2) + ")", mouseX, mouseY);     // fix this coordinate
 
   // drawing circle
   ctx.beginPath();
