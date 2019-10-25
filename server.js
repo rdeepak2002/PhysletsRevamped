@@ -3,10 +3,14 @@ var app = express();
 
 var port = process.env.PORT || 8080;
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname));
 
 app.get('/', function(req, res) {
-	res.render('index');
+	res.sendFile('/public/simulations.html', {"root": __dirname});
+})
+
+app.get('/simulations', function(req, res) {
+	res.sendFile('/public/simulations.html', {"root": __dirname});
 })
 
 app.listen(port, function() {
