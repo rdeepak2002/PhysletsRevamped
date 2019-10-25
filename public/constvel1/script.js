@@ -1,5 +1,8 @@
 var canvas = document.getElementById('canvas1');
 
+var showXCoordinate = true;
+var ghostObject = true;
+
 var initialTime = 0;
 var scale = 50;
 
@@ -37,11 +40,20 @@ function draw() {
 
   // drawing at mouse position
   ctx.font = "30px Comic Sans MS";
-  ctx.fillStyle = "red";
+  ctx.fillStyle = "blue";
   ctx.textAlign = "center";
-  ctx.fillText("(" + (mouseX/scale-4).toFixed(2) + ", " + (-1*mouseY/scale+8).toFixed(2) + ")", mouseX, mouseY);     // fix this coordinate
+  ctx.fillText("(" + (mouseX/scale-4).toFixed(2) + ", " + (-1*mouseY/scale+8).toFixed(2) + ")", mouseX, mouseY);
 
-  // drawing circle
+  // drawing circle and possibly its x coordinate
+  if(showXCoordinate == true) {
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "blue";
+    ctx.textAlign = "center";
+    var xPosText = (convertCartesianX(x, canvasWidth)/scale-8+0.5).toFixed(2);
+    console.log(xPosText);
+    ctx.fillText(xPosText, convertCartesianX(x-radius/2, canvasWidth), convertCartesianY(y, canvasHeight));
+  }
+
   ctx.beginPath();
   ctx.arc(convertCartesianX(x-radius/2, canvasWidth), convertCartesianY(y, canvasHeight), radius, 0, 2 * Math.PI, false);
   ctx.fillStyle = 'red';
@@ -83,7 +95,6 @@ function convertCartesianX(x, width) {
 }
 
 function convertCartesianY(y, height) {
-  console.log(height/2 + y)
   return height/2 + y;
 }
 
