@@ -13,6 +13,11 @@ app.get('/simulations', function(req, res) {
 	res.sendFile('/public/simulations.html', {"root": __dirname});
 })
 
+
+app.get('/constvel1', function(req, res) {
+	res.sendFile('/public/constvel1/constvel1.html', {"root": __dirname});
+})
+
 app.listen(port, function() {
 	console.log('app running')
 })
