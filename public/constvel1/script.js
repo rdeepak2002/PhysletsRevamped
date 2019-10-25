@@ -29,11 +29,27 @@ function draw() {
 
   var dt = (curTime - initialTime)/1000;            // get delta time in seconds
 
-  // drawing part
+  // drawing circle
   ctx.beginPath();
-  ctx.arc(convertCartesianX(x, canvasWidth), convertCartesianY(y, canvasHeight), radius, 0, 2 * Math.PI, false);
+  ctx.arc(convertCartesianX(x-radius/2, canvasWidth), convertCartesianY(y, canvasHeight), radius, 0, 2 * Math.PI, false);
   ctx.fillStyle = 'red';
   ctx.fill();
+
+  // drawing grid
+  for(var i = -10; i < 20; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i*1*scale, 0);
+    ctx.lineTo(i*1*scale, canvasHeight);
+    ctx.stroke();
+  }
+
+  for(var i = -10; i < 10; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, i*1*scale);
+    ctx.lineTo(canvasWidth, i*1*scale);
+    ctx.stroke();
+  }
+
 
   x = initX + 2*dt*scale; // xf = x0 + vt
 
