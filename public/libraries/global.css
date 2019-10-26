@@ -1,3 +1,19 @@
 body {
 	background-color: white;
 }
+
+.navbar {
+	background-color: white !important;
+}
+
+.nav-link {
+	color: black !important;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 1.4rem;
+	margin-right: 100px;
+}
+
+.nav-link:hover {
+	color: rgb(100, 100, 100) !important;
+}
