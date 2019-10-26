@@ -1,13 +1,15 @@
+/*body style*/
 body {
-	background-color: white;
+	background-color: #EEE2DC;
 }
 
+/*navigation bar styles*/
 .navbar {
-	background-color: white !important;
+	background-color: #EDC7B7 !important;
 }
 
 .nav-link {
-	color: black !important;
+	color: #AC3B61 !important;
 	text-transform: uppercase;
 	font-weight: bold;
 	font-size: 1.4rem;
@@ -15,5 +17,12 @@ body {
 }
 
 .nav-link:hover {
-	color: rgb(100, 100, 100) !important;
+	filter: brightness(85%);
+}
+
+/*text styles*/
+.unitHeader {
+	color: #123C69;
+	text-transform: uppercase;
+	font-weight: bold;
 }
