@@ -1,3 +1,7 @@
+$(function(){
+  $("#nav-placeholder").load("/navbar/navbar.html");
+});
+
 function setup() {
     let canvas = createCanvas(window.innerWidth, window.innerHeight*.7);
     canvas.parent('canvas-parent');
