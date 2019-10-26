@@ -83,7 +83,6 @@ function draw() {
 
   if(pauseAnim) {
   	initialTime = curTime - dt*1000;
-  	console.log("stuff");
   }
   else {
 	  dt = (curTime-initialTime)/1000;
