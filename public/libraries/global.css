@@ -1,29 +1,45 @@
 /*body style*/
 body {
-	background-color: #EEE2DC;
+	/*background-color: #EEE2DC;*/
+}
+
+.background {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -100;
+	background: url(/background3.jpg);
+	background-size: 100% 100%;
+	-webkit-filter: brightness(100%);
+	filter: brightness(100%);
+	opacity: 1;
 }
 
 /*navigation bar styles*/
 .navbar {
-	background-color: #EDC7B7 !important;
+	background: transparent !important; /*#EDC7B7 !important;*/
 }
 
 .nav-link {
-	color: #AC3B61 !important;
+	color: #CC3B61 !important;
 	text-transform: uppercase;
-	font-weight: bold;
+	font-weight: 600;
 	font-size: 1.4rem;
-	margin-right: 100px;
+	margin-right: 3rem;
+	-webkit-transition: 170ms all;
+	transition: 170ms all;
 }
 
 .nav-link:hover {
-	filter: brightness(85%);
+	filter: brightness(75%);
 }
 
 /*text styles*/
 .unitHeader {
 	color: #123C69;
-	text-transform: uppercase;
-	font-weight: bold;
+	/*text-transform: uppercase;*/
+	/*font-weight: bold;*/
 	font-size: 3em;
 }
