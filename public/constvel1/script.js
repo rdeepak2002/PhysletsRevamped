@@ -35,8 +35,17 @@ function setup() {
   let canvas = createCanvas(canvasWidth, canvasHeight);
 
   canvas.parent('canvas-parent');
+
+  let showXButton = createButton('Show X');
+  showXButton.mousePressed(toggleShowX);
+  showXButton.class("toggleButton");
+
   let info = createDiv('Find the velocity of the object. Answer: 2 m/s');
   info.class("info");
+}
+
+function toggleShowX() {
+	showX = !showX;
 }
 
 function draw() {
