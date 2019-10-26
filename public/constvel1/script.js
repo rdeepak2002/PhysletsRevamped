@@ -26,6 +26,10 @@ var showX = true;
 // circle object
 var circle = {};
 
+// html elements
+var showXButton;
+var info;
+
 function setup() {
   initialTime = Date.now();
   curTime = Date.now();
@@ -36,29 +40,36 @@ function setup() {
 
   canvas.parent('canvas-parent');
 
-  let showXButton = createButton('Show X');
+  showXButton = createButton('Hide X');
   showXButton.mousePressed(toggleShowX);
   showXButton.class("toggleButton");
 
-  let info = createDiv('Find the velocity of the object. Answer: 2 m/s');
+  info = createDiv('Find the velocity of the object. Answer: 2 m/s');
   info.class("info");
 }
 
 function toggleShowX() {
 	showX = !showX;
+
+	if(showX) {
+		showXButton.setLabel('Show X');
+	}
+	else {
+		showXButton.setLabel('Hide X');
+	}
 }
 
 function draw() {
-  background(230);
+  clear();
 
   curTime = Date.now();
 
   var dt = (curTime-initialTime)/1000;
   circle.x = xPositionAtTime(xInit, 2*objScale, dt);
 
-  drawPositionAtMouse();
   drawGridLines(6, 3);
 	drawCircleObject();
+  drawPositionAtMouse();
 }
 
 function drawPositionAtMouse() {
