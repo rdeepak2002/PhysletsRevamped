@@ -1,3 +1,7 @@
+$(function(){
+  $("#nav-placeholder").load("/navbar/navbar.html");
+});
+
 var canvas = document.getElementById('canvas1');
 
 var showXCoordinate = true;
