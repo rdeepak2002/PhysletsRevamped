@@ -2,22 +2,88 @@ $(function(){
   $("#nav-placeholder").load("/navbar/navbar.html");
 });
 
-$(function(){
-  $("#nav-placeholder").load("/navbar/navbar.html");
-});
-
+// inital time variable
 var initialTime = 0;
+var curTime = 0;
+
+// scale of all objects
+var xWidth = 15;
+var yWidth = 6;
+var objScale = window.innerWidth/xWidth;
+
+// canvas width and height
+var canvasWidth = xWidth*objScale;
+var canvasHeight = yWidth*objScale;
+
+// initial circle variables
+var xInit = 2*objScale;
+var yInit = 2*objScale;
+var radiusInit = 0.5*objScale;
+
+// circle object
+var circle = {};
 
 function setup() {
   initialTime = Date.now();
+  curTime = Date.now();
 
-  let canvas = createCanvas(window.innerWidth, window.innerHeight*.7);
+  circle = {x: xInit, y: yInit, radius: radiusInit};
+
+  let canvas = createCanvas(canvasWidth, canvasHeight);
+
   canvas.parent('canvas-parent');
-  let info = createDiv('Find the velocity of the object.');
+  let info = createDiv('Find the velocity of the object. Answer: 2 m/s.');
 }
 
 function draw() {
   background(230);
+  curTime = Date.now();
+
+  var dt = (curTime-initialTime)/1000;
+  circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+
+  drawPositionAtMouse();
+  drawGridLines();
+	drawCircleObject();
+}
+
+function drawPositionAtMouse() {
+  line(mouseX, 0, mouseX, 100);
+}
+
+function xPositionAtTime(x0, velocity, dt) {
+	return x0+velocity*dt;
+}
+
+function drawGridLines() {
+  fill(0, 0, 0);
+
+  for(var i = 0; i < canvasWidth; i+=objScale) {
+	  line(i, 0, i, canvasHeight);
+  }
+
+  for(var i = 0; i < canvasHeight; i+=objScale) {
+	  line(0, i, canvasWidth, i);
+  }
+}
+
+function drawCircleObject() {
+  if(circle.x > canvasWidth) {	// reset position if at max width of screen
+  	resetCircleObject();
+  }
+
+	fill(255, 100, 100);
+  ellipse(circle.x, circle.y, circle.radius, circle.radius);
+}
+
+function resetCircleObject() {
+	circle.x = xInit;
+	circle.y = yInit;
+  initialTime = Date.now();
+}
+
+function getTruePosition(position) {
+	return position*objScale;
 }
 
 // var canvas = document.getElementById('canvas1');
