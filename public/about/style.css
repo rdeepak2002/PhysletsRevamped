@@ -2,7 +2,7 @@
 	width: 100%;
 	height: 100%;
 	display: inline-block;
-	padding: 100px;
+	padding-top: 50px;
 	text-align: center;
 }
 
@@ -12,4 +12,9 @@
 
 .linkToSimulation {
 	display: inline-block;
+}
+
+.informationText {
+	font-size: 1.5em;
+	margin-bottom: 20px;
 }
