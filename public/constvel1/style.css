@@ -5,6 +5,7 @@
 }
 
 .toggleButton{
+	min-width: 120px;
 	outline: none !important;
 	display:inline-block;
 	margin-left: 10px;

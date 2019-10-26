@@ -5,6 +5,7 @@ $(function(){
 // inital time variable
 var initialTime = 0;
 var curTime = 0;
+var dt = 0;
 
 // scale of all objects
 var xWidth = 15;
@@ -22,12 +23,14 @@ var radiusInit = 0.5*objScale;
 
 // displayVariables
 var showX = true;
+var pauseAnim = false;
 
 // circle object
 var circle = {};
 
 // html elements
 var showXButton;
+var playButton;
 var info;
 
 function setup() {
@@ -40,6 +43,10 @@ function setup() {
 
   canvas.parent('canvas-parent');
 
+  playButton = createButton('Play');
+  playButton.mousePressed(togglePause);
+  playButton.class("toggleButton");
+
   showXButton = createButton('Hide X');
   showXButton.mousePressed(toggleShowX);
   showXButton.class("toggleButton");
@@ -48,6 +55,16 @@ function setup() {
   info.class("info");
 }
 
+function togglePause() {
+	pauseAnim = !pauseAnim;
+
+	if(pauseAnim) {
+		playButton.html('Pause');
+	}
+	else {
+		playButton.html('Play');
+	}
+}
 function toggleShowX() {
 	showX = !showX;
 
@@ -64,8 +81,14 @@ function draw() {
 
   curTime = Date.now();
 
-  var dt = (curTime-initialTime)/1000;
-  circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+  if(pauseAnim) {
+  	initialTime = curTime - dt*1000;
+  	console.log("stuff");
+  }
+  else {
+	  dt = (curTime-initialTime)/1000;
+	  circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+  }
 
   drawGridLines(6, 3);
 	drawCircleObject();
