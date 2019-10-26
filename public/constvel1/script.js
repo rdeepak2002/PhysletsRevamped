@@ -16,8 +16,8 @@ var canvasWidth = xWidth*objScale;
 var canvasHeight = yWidth*objScale;
 
 // initial circle variables
-var xInit = 2*objScale;
-var yInit = 2*objScale;
+var xInit = 3*objScale;
+var yInit = 3*objScale;
 var radiusInit = 0.5*objScale;
 
 // circle object
@@ -37,37 +37,61 @@ function setup() {
 
 function draw() {
   background(230);
+
   curTime = Date.now();
 
   var dt = (curTime-initialTime)/1000;
   circle.x = xPositionAtTime(xInit, 2*objScale, dt);
 
   drawPositionAtMouse();
-  drawGridLines();
+  drawGridLines(6, 3);
 	drawCircleObject();
 }
 
 function drawPositionAtMouse() {
-  line(mouseX, 0, mouseX, 100);
+	stroke(51);
+	strokeWeight(1);
+	textSize(32);
+	let x = (-6+(mouseX/objScale)).toFixed(2);			// to make start x at -3
+	let y = (3+-1*(mouseY/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
+	if(mouseX != 0 && mouseY !=0) {
+		text("(" + x + ", " + y + ")", mouseX, mouseY);
+	}	
 }
 
 function xPositionAtTime(x0, velocity, dt) {
 	return x0+velocity*dt;
 }
 
-function drawGridLines() {
-  fill(0, 0, 0);
-
+function drawGridLines(originX, originY) {
   for(var i = 0; i < canvasWidth; i+=objScale) {
+  	if(Math.round(i) == Math.round(originX*objScale)) {
+  		strokeWeight(6);
+			stroke(51);
+  	}
+  	else {
+  		strokeWeight(1);
+			stroke(51);
+  	}
 	  line(i, 0, i, canvasHeight);
   }
 
   for(var i = 0; i < canvasHeight; i+=objScale) {
+  	if(Math.round(i) == Math.round(originY*objScale)) {
+  		strokeWeight(6);
+			stroke(51);
+  	}
+  	else {
+  		strokeWeight(1);
+			stroke(51);
+  	}
 	  line(0, i, canvasWidth, i);
   }
 }
 
 function drawCircleObject() {
+	stroke(51);
+	strokeWeight(1);
   if(circle.x > canvasWidth) {	// reset position if at max width of screen
   	resetCircleObject();
   }
@@ -85,125 +109,3 @@ function resetCircleObject() {
 function getTruePosition(position) {
 	return position*objScale;
 }
-
-// var canvas = document.getElementById('canvas1');
-
-// var showXCoordinate = true;
-// var ghostObject = true;
-
-// var initialTime = 0;
-// var scale = 50;
-
-// var initX = -3*scale;
-// var initY = 0*scale;
-// var x = initX;
-// var y = initY;
-
-// var radius = 0.5*scale;
-// var canvasWidth = 15*scale;
-// var canvasHeight = 10*scale;
-// var maxX = canvasWidth - 1*scale - canvasWidth/2;
-
-// var canvasPos = getPosition(canvas);
-// var mouseX = -100;
-// var mouseY = -100;
-
-// function init() {
-//   canvas.width  = canvasWidth;
-//   canvas.height = canvasHeight;
-//   canvas.addEventListener("mousemove", setMousePosition, false);
-//   initialTime = Date.now();
-//   window.requestAnimationFrame(draw);
-// }
-
-// function draw() {
-//   var ctx = document.getElementById('canvas1').getContext('2d');
-
-//   ctx.globalCompositeOperation = 'destination-over';
-//   ctx.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
-
-//   var curTime = Date.now();
-
-//   var dt = (curTime - initialTime)/1000;            // get delta time in seconds
-
-//   // drawing at mouse position
-//   ctx.font = "30px Comic Sans MS";
-//   ctx.fillStyle = "blue";
-//   ctx.textAlign = "center";
-//   ctx.fillText("(" + (mouseX/scale-4).toFixed(2) + ", " + (-1*mouseY/scale+8).toFixed(2) + ")", mouseX, mouseY);
-
-//   // drawing circle and possibly its x coordinate
-//   if(showXCoordinate == true) {
-//     ctx.font = "30px Comic Sans MS";
-//     ctx.fillStyle = "blue";
-//     ctx.textAlign = "center";
-//     var xPosText = (convertCartesianX(x, canvasWidth)/scale-8+0.5).toFixed(2);
-//     console.log(xPosText);
-//     ctx.fillText(xPosText, convertCartesianX(x-radius/2, canvasWidth), convertCartesianY(y, canvasHeight));
-//   }
-
-//   ctx.beginPath();
-//   ctx.arc(convertCartesianX(x-radius/2, canvasWidth), convertCartesianY(y, canvasHeight), radius, 0, 2 * Math.PI, false);
-//   ctx.fillStyle = 'red';
-//   ctx.fill();
-
-//   // drawing grid
-//   for(var i = -10; i < 20; i++) {
-//     ctx.beginPath();
-//     ctx.moveTo(i*1*scale, 0);
-//     ctx.lineTo(i*1*scale, canvasHeight);
-//     ctx.stroke();
-//   }
-
-//   for(var i = -10; i < 10; i++) {
-//     ctx.beginPath();
-//     ctx.moveTo(0, i*1*scale);
-//     ctx.lineTo(canvasWidth, i*1*scale);
-//     ctx.stroke();
-//   }
-
-
-//   x = initX + 2*dt*scale; // xf = x0 + vt
-
-//   if(x > maxX) {
-//     resetPosition();
-//   }
-
-//   window.requestAnimationFrame(draw);
-// }
-
-// function resetPosition() {
-//   x = initX;
-//   y = initY;
-//   initialTime = Date.now();
-// }
-
-// function convertCartesianX(x, width) {
-//   return width/2 + x;
-// }
-
-// function convertCartesianY(y, height) {
-//   return height/2 + y;
-// }
-
-// function setMousePosition(e) {
-//   mouseX = e.clientX - canvasPos.x;
-//   mouseY = e.clientY - canvasPos.y;
-// }
-
-// function getPosition(el) {
-//   var xPosition = 0;
-//   var yPosition = 0;
- 
-//   while (el) {
-//     xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-//     yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
-//     el = el.offsetParent;
-//   }
-//   return {
-//     x: xPosition,
-//     y: yPosition
-//   };
-// }    
-
-// init();
