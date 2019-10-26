@@ -43,7 +43,7 @@ function setup() {
 
   canvas.parent('canvas-parent');
 
-  playButton = createButton('Play');
+  playButton = createButton('Pause');
   playButton.mousePressed(togglePause);
   playButton.class("toggleButton");
 
@@ -59,10 +59,10 @@ function togglePause() {
 	pauseAnim = !pauseAnim;
 
 	if(pauseAnim) {
-		playButton.html('Pause');
+		playButton.html('Play');
 	}
 	else {
-		playButton.html('Play');
+		playButton.html('Pause');
 	}
 }
 function toggleShowX() {
