@@ -1,8 +1,8 @@
 .unitContainer {
 	width: 100%;
 	height: 100%;
+	padding-top: 50px;
 	display: inline-block;
-	padding: 100px;
 	text-align: center;
 }
 
@@ -10,6 +10,18 @@
 	text-align: center;
 }
 
+.revampedSection {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.revampedCredits {
+	text-transform: uppercase;
+	font-weight: bold;
+	margin-right: 10px;
+	font-size: 1.4em;
+}
+
 .linkToSimulation {
-	display: inline-block;
+	font-size: 1.4em;
 }
