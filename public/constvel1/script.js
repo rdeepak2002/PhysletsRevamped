@@ -6,7 +6,11 @@ $(function(){
   $("#nav-placeholder").load("/navbar/navbar.html");
 });
 
+var initialTime = 0;
+
 function setup() {
+  initialTime = Date.now();
+
   let canvas = createCanvas(window.innerWidth, window.innerHeight*.7);
   canvas.parent('canvas-parent');
   let info = createDiv('Find the velocity of the object.');
