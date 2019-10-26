@@ -22,15 +22,17 @@ var yInit = 3*objScale;
 var radiusInit = 0.5*objScale;
 
 // displayVariables
-var showX = true;
 var pauseAnim = false;
+var showX = true;
+var showGhosts = false;
 
 // circle object
 var circle = {};
 
 // html elements
-var showXButton;
 var playButton;
+var showXButton;
+var showGhostsButton;
 var info;
 
 function setup() {
@@ -51,8 +53,23 @@ function setup() {
   showXButton.mousePressed(toggleShowX);
   showXButton.class("toggleButton");
 
+  showGhostsButton = createButton('Show Ghosts');
+  showGhostsButton.mousePressed(toggleGhosts);
+  showGhostsButton.class("toggleButton");
+
   info = createDiv('Find the velocity of the object. Answer: 2 m/s');
   info.class("info");
+}
+
+function toggleGhosts() {
+	showGhosts = !showGhosts;
+
+	if(showGhosts) {
+		showGhostsButton.html('Hide Ghosts');
+	}
+	else {
+		showGhostsButton.html('Show Ghosts');
+	}
 }
 
 function togglePause() {
@@ -65,6 +82,7 @@ function togglePause() {
 		playButton.html('Pause');
 	}
 }
+
 function toggleShowX() {
 	showX = !showX;
 
@@ -91,7 +109,23 @@ function draw() {
 
   drawGridLines(6, 3);
 	drawCircleObject();
+	if(showGhosts) {
+  	drawGhosts();
+	}
   drawPositionAtMouse();
+}
+
+function drawGhosts() {
+	strokeWeight(0);
+	fill(255, 100, 100, 70);
+
+	for(var i = 0; i < 8; i++) {
+		let ghostX = xPositionAtTime(xInit, 2*objScale, i);
+
+		if(ghostX < circle.x) {
+	  	ellipse(ghostX, circle.y, circle.radius, circle.radius);
+		}
+	}
 }
 
 function drawPositionAtMouse() {
