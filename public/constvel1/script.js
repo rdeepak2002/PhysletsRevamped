@@ -52,10 +52,10 @@ function toggleShowX() {
 	showX = !showX;
 
 	if(showX) {
-		showXButton.setLabel('Show X');
+		showXButton.html('Hide X');
 	}
 	else {
-		showXButton.setLabel('Hide X');
+		showXButton.html('Show X');
 	}
 }
 
