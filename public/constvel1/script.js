@@ -20,6 +20,9 @@ var xInit = 3*objScale;
 var yInit = 3*objScale;
 var radiusInit = 0.5*objScale;
 
+// displayVariables
+var showX = true;
+
 // circle object
 var circle = {};
 
@@ -32,7 +35,8 @@ function setup() {
   let canvas = createCanvas(canvasWidth, canvasHeight);
 
   canvas.parent('canvas-parent');
-  let info = createDiv('Find the velocity of the object. Answer: 2 m/s.');
+  let info = createDiv('Find the velocity of the object. Answer: 2 m/s');
+  info.class("info");
 }
 
 function draw() {
@@ -94,6 +98,14 @@ function drawCircleObject() {
 	strokeWeight(1);
   if(circle.x > canvasWidth) {	// reset position if at max width of screen
   	resetCircleObject();
+  }
+
+  if(showX) {
+  		textSize(32);
+			let x = (-6+(circle.x/objScale)).toFixed(2);			// to make start x at -3
+			let y = (3+-1*(circle.y/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
+			fill(0, 0, 0);
+			text("(" + x + ", " + y + ")", circle.x-circle.radius*1.6, circle.y-circle.radius);
   }
 
 	fill(255, 100, 100);
