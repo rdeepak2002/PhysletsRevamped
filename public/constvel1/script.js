@@ -40,7 +40,8 @@ function setup() {
 }
 
 function draw() {
-  background(230);
+  clear(); //must use clear for backgrounds with transparency
+  //background(0, 60);
 
   curTime = Date.now();
 
