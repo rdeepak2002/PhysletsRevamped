@@ -2,8 +2,32 @@
 	<html>
 	<head>
 		<meta http-equiv = "refresh" content = "2; url = /simulations" />
+
+		<style type="text/css">
+		.hide{
+			display:none;
+		}
+		.show{
+			display:block;
+			position:absolute;
+			left: 200px;
+			top: 200px;
+			color: blue;
+		}
+		</style>
+		<script type="text/javascript" language="javascript">
+		window.onload=function()  //executes when the page finishes loading
+		{
+			window.location.href = '/simulations'; //relative to domain
+			setTimeout(func1, 3000);  //sets a timer which calls function func1 after 3,000 milliseconds = 3 secs.
+		};
+		function func1()
+		{
+			document.getElementById("my_div").className="show";
+		}
+		</script>
 	</head>
 	<body>
-		Click <a href="/simulations">here</a>
+		<div id="my_div" class="hide">Click <a href="/simulations">here</a></div>
 	</body>
 </html>
