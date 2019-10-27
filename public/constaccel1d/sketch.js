@@ -3,12 +3,15 @@ $(function(){
 })
 
 let grid
+let circle
+let tInitial
 
 function setup() {
-    let canvas = createCanvas(window.innerWidth, window.innerHeight*.7)
+    let canvas = createCanvas(window.innerWidth*.8, window.innerHeight*.8)
     canvas.parent('canvas-parent')
     let info = createDiv('Find the acceleration of the object.')
-    grid = new Grid(-4, 10, -2, 2, width)
+    grid = new Grid(-4, 10, -3, 3, width)
+    tInitial = millis()
 }
 
 function draw() {
@@ -45,12 +48,15 @@ class Grid {
     }
 
     draw(scaleX, scaleY) {
+        stroke(51)
         for(let x = this.xmin; x <= this.xmax; x += scaleX) {
             let xDraw = this.unproject(x, 0).x
+            strokeWeight(x == 0 ? 6 : 1);
             line(xDraw, 0, xDraw, this.screenHeight)
         }
         for(let y = this.ymin; y <= this.ymax; y += scaleY) {
             let yDraw = this.unproject(0, y).y
+            strokeWeight(y == 0 ? 6 : 1)
             line(0, yDraw, this.screenWidth, yDraw)
         }
     }
