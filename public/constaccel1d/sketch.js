@@ -9,30 +9,34 @@ function setup() {
     canvas.parent('canvas-parent')
     let info = createDiv('Find the acceleration of the object.')
     let ratio = height / width
-    let dim = ratio * 14 / 2
-    grid = new Grid(-4, 10, -dim, dim)
+    grid = new Grid(-4, 10, -3, 3, width, width * ratio)
 }
 
 function draw() {
     clear()
 
-    let {x, y} = grid.project(mouseX, mouseY)
-    text(`(${x.toFixed(2)}, ${y.toFixed(2)})`, mouseX, mouseY);
-
     grid.draw(1, 1)
+
+    let {x, y} = grid.project(mouseX, mouseY)
+    text(`(${x.toFixed(2)}, ${y.toFixed(2)})`, mouseX, mouseY)
+
+    fill(255, 100, 100)
+
 }
 
 class Grid {
-    constructor(xmin, xmax, ymin, ymax) {
+    constructor(xmin, xmax, ymin, ymax, , screenHeight) {
         this.xmin = xmin
         this.xmax = xmax
         this.ymin = ymin
         this.ymax = ymax
+        this.screenWidth = screenWidth
+        this.screenHeight = screenHeight
     }
 
     project(screenX, screenY) {
-        let x = screenX / width * (this.xmax - this.xmin) + this.xmin
-        let y = (height - screenY) / height * (this.ymax - this.ymin) + this.ymin
+        let x = screenX / screenWidth * (this.xmax - this.xmin) + this.xmin
+        let y = (height - screenY) / screenHeight * (this.ymax - this.ymin) + this.ymin
         return {x, y}
     }
     unproject(gridX, gridY) {
