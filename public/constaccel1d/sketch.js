@@ -8,8 +8,7 @@ function setup() {
     let canvas = createCanvas(window.innerWidth, window.innerHeight*.7)
     canvas.parent('canvas-parent')
     let info = createDiv('Find the acceleration of the object.')
-    let ratio = height / width
-    grid = new Grid(-4, 10, -3, 3, width, width * ratio)
+    grid = new Grid(-4, 10, -2, 2, width)
 }
 
 function draw() {
@@ -31,28 +30,28 @@ class Grid {
         this.ymin = ymin
         this.ymax = ymax
         this.screenWidth = screenWidth
-        this.screenHeight = screenHeight
+        this.screenHeight = screenHeight || ((ymax - ymin) / (xmax - xmin) * screenWidth)
     }
 
     project(screenX, screenY) {
-        let x = screenX / screenWidth * (this.xmax - this.xmin) + this.xmin
-        let y = (height - screenY) / screenHeight * (this.ymax - this.ymin) + this.ymin
+        let x = screenX / this.screenWidth * (this.xmax - this.xmin) + this.xmin
+        let y = (height - screenY) / this.screenHeight * (this.ymax - this.ymin) + this.ymin
         return {x, y}
     }
     unproject(gridX, gridY) {
-        let x = (gridX - this.xmin) / (this.xmax - this.xmin) * width
-        let y = height - ((gridY - this.ymin) / (this.ymax - this.ymin) * height)
+        let x = (gridX - this.xmin) / (this.xmax - this.xmin) * this.screenWidth
+        let y = this.screenHeight - ((gridY - this.ymin) / (this.ymax - this.ymin) * this.screenHeight)
         return {x, y}
     }
 
     draw(scaleX, scaleY) {
-        for(let x = this.xmin; x < this.xmax; x += scaleX) {
+        for(let x = this.xmin; x <= this.xmax; x += scaleX) {
             let xDraw = this.unproject(x, 0).x
-            line(xDraw, 0, xDraw, height)
+            line(xDraw, 0, xDraw, this.screenHeight)
         }
-        for(let y = this.ymin; y < this.ymax; y += scaleY) {
+        for(let y = this.ymin; y <= this.ymax; y += scaleY) {
             let yDraw = this.unproject(0, y).y
-            line(0, yDraw, width, yDraw)
+            line(0, yDraw, this.screenWidth, yDraw)
         }
     }
 }
