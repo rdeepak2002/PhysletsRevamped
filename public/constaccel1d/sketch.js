@@ -25,7 +25,7 @@ function draw() {
 }
 
 class Grid {
-    constructor(xmin, xmax, ymin, ymax, , screenHeight) {
+    constructor(xmin, xmax, ymin, ymax, screenWidth, screenHeight) {
         this.xmin = xmin
         this.xmax = xmax
         this.ymin = ymin
