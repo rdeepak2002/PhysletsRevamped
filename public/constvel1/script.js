@@ -167,7 +167,7 @@ function drawTime() {
 	strokeWeight(1);
 	textSize(32);
 	fill(150, 20, 150);
-	text("Time " + dt.toFixed(2) + " seconds", 20, 40);
+	text("Time: " + dt.toFixed(2) + " seconds", 20, 40);
 }
 
 function drawGhosts() {
