@@ -31,6 +31,9 @@ var circle = {};
 
 // html elements
 var playButton;
+var skipBackwardButton;
+var skipForwardButton;
+var resetButton;
 var showXButton;
 var showGhostsButton;
 var info;
@@ -45,9 +48,21 @@ function setup() {
 
   canvas.parent('canvas-parent');
 
+  skipBackwardButton = createButton('<< Skip');
+  skipBackwardButton.mousePressed(skipBack);
+  skipBackwardButton.class("toggleButton");
+
   playButton = createButton('Pause');
   playButton.mousePressed(togglePause);
   playButton.class("toggleButton");
+
+  skipForwardButton = createButton('Skip >>');
+  skipForwardButton.mousePressed(skipForward);
+  skipForwardButton.class("toggleButton");
+
+  resetButton = createButton('Reset');
+  resetButton.mousePressed(resetCircleObject);
+  resetButton.class("toggleButton");
 
   showXButton = createButton('Hide X');
   showXButton.mousePressed(toggleShowX);
@@ -59,6 +74,36 @@ function setup() {
 
   info = createDiv('Find the velocity of the object. Answer: 2 m/s');
   info.class("info");
+
+  frameRate(60);
+}
+
+function skipBack() {
+	let skipTime = 0.1;
+	if(pauseAnim)
+	{
+		dt -= skipTime;
+		circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+		if(circle.x < xPositionAtTime(xInit, 2*objScale, 0)) {
+			resetCircleObject();
+		}
+	}
+	else
+		initialTime += skipTime*1000;
+}
+
+function skipForward() {
+	let skipTime = 0.1;
+	if(pauseAnim) {
+ 		dt += skipTime;
+ 		circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+		if(circle.x > xPositionAtTime(xInit, 2*objScale, 6.0)) {
+			circle.x = xPositionAtTime(xInit, 2*objScale, 6.0);
+			dt = 6.0;
+		}
+	}
+ 	else
+ 		initialTime -= skipTime*1000;
 }
 
 function toggleGhosts() {
@@ -113,6 +158,16 @@ function draw() {
   	drawGhosts();
 	}
   drawPositionAtMouse();
+  drawTime();
+}
+
+
+function drawTime() {
+	stroke(51);
+	strokeWeight(1);
+	textSize(32);
+	fill(150, 20, 150);
+	text("Time " + dt.toFixed(2) + " seconds", 20, 40);
 }
 
 function drawGhosts() {
@@ -193,6 +248,8 @@ function resetCircleObject() {
 	circle.x = xInit;
 	circle.y = yInit;
   initialTime = Date.now();
+  curTime = Date.now();
+  dt = 0;
 }
 
 function getTruePosition(position) {
