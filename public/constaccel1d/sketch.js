@@ -1,56 +1,108 @@
 $(function(){
-    $("#nav-placeholder").load("/navbar/navbar.html")
+    $('#nav-placeholder').load('/navbar/navbar.html')
 })
 
 let grid
 let circle
-let tInitial
-let timeDiv, info
+let time
+let info
 let playButton, stepLeftButton, stepRightButton, resetButton
 let xButton, vButton, ghostButton, answerButton
+let isPlaying, showX, showGhosts
+
+const size = 40
 
 function setup() {
     let canvas = createCanvas(window.innerWidth*.7, window.innerHeight*.7)
     canvas.parent('canvas-parent')
 
-    timeDiv = createDiv('Time: 0')
-    timeDiv.parent('content')
+    xButton = createButton('Show X')
+        .mousePressed(() => {
+            showX = !showX
+            xButton.html(showX ? 'Hide X' : 'Show X')
+        })
+        .parent('button-bar')
+        .class('toggleButton')
+    ghostButton = createButton('Show Ghosts')
+        .mousePressed(() => {
+            showGhosts = !showGhosts
+            ghostButton.html(showGhosts ? 'Hide Ghosts' : 'Show Ghosts')
+        })
+        .parent('button-bar')
+        .class('toggleButton')
 
-    playButton = createButton(createIcon("media-play"))
-    stepLeftButton = createButton(createIcon("media-step-backward"))
-    stepRightButton = createButton(createIcon("media-step-forward"))
-    resetButton = createButton(createIcon("reload"))
-    playButton.class('icon-button action-button').parent('content')
-    stepLeftButton.class('icon-button action-button').parent('content')
-    stepRightButton.class('icon-button action-button').parent('content')
-    resetButton.class('icon-button action-button').parent('content')
+    playButton = createButton(createIcon('media-pause'))
+        .mousePressed(() => {
+            isPlaying = !isPlaying
+            playButton.html(createIcon(isPlaying ? 'media-pause' : 'media-play'))
+        })
+        .class('icon-button action-button')
+        .parent('content')
+    stepLeftButton = createButton(createIcon('media-step-backward'))
+        .mousePressed(() => time = Math.max(0, time - .1))
+        .class('icon-button action-button')
+        .parent('content')
+    stepRightButton = createButton(createIcon('media-step-forward'))
+        .mousePressed(() => time += .1)
+        .class('icon-button action-button')
+        .parent('content')
+    resetButton = createButton(createIcon('reload'))
+        .mousePressed(() => time = 0)
+        .class('icon-button action-button')
+        .parent('content')
 
     info = createDiv(`
         <h1>Description</h1> A ball moves across the screen with an increasing velocity.
-        <h1>Question</h1> What is the acceleration of the ball? (You should be able to calculateit from the "show velocity" mode, but could you also calculateit from the "show X" mode?)
-    `)
-    info.parent('content')
+        <h1>Question</h1> What is the acceleration of the ball? (You should be able to calculate it from the 'show velocity' mode, but could you also calculate it from the 'show X' mode?)
+    `).parent('content')
+    
+    answer = createDiv(`
+        Enter Answer: 
+        <input id="answer"/> m/s 
+        <button class="toggleButton" onClick="checkAnswer()">Submit</button>
+    `).parent('content')
 
     grid = new Grid(-4, 10, -3, 3, width)
-    tInitial = millis()
-    frameRate(60)
+    isPlaying = true
+    showX = false
+    time = 0
+    frameRate(50)
 }
 
 function draw() {
     clear()
-
+    textSize(30)
     grid.draw(1, 1)
 
     let {x, y} = grid.project(mouseX, mouseY)
+    fill(0, 0, 255)
+    stroke(0, 0, 255)
     text(`(${x.toFixed(2)}, ${y.toFixed(2)})`, mouseX, mouseY) 
 
-    fill(255, 100, 100)
-    let t = (millis() - tInitial) / 1000
-    timeDiv.html(`Time: ${t.toFixed(2)}`)
+    fill(150, 20, 150)
+    stroke(150, 20, 150)
+    text(`Time: ${time.toFixed(2)} seconds`, 10, 30)
     
-    let circle = grid.unproject(pos(t), 0)
-    ellipse(circle.x, circle.y, 50, 50)
-    if(pos(t) > grid.xmax + 1.5) tInitial = millis()
+    const posX = pos(time)
+    if(showGhosts) {
+        for(let i = 0; i < 4; i += 1) {
+            if(posX >= pos(i)) {
+                let coords = grid.unproject(pos(i), 0)
+                fill(255, 100, 100, 70)
+                stroke(0, 0)
+                ellipse(coords.x, coords.y, size, size)
+            }
+        }
+    }
+
+    let circle = grid.unproject(posX, 0)
+    fill(255, 100, 100)
+    stroke(0)
+    ellipse(circle.x, circle.y, size, size)
+    fill(0)
+    if(showX) text(`(${posX.toFixed(2)}, 0)`, circle.x - size/2, circle.y - 40) 
+    if(posX > grid.xmax + 1.5) time = 0
+    if(isPlaying) time += .02
 }
 
 const accel = 2
@@ -61,38 +113,8 @@ function vel(t) {
     return accel*t;
 }
 
-class Grid {
-    constructor(xmin, xmax, ymin, ymax, screenWidth, screenHeight=((ymax - ymin) / (xmax - xmin) * screenWidth)) {
-        this.xmin = xmin
-        this.xmax = xmax
-        this.ymin = ymin
-        this.ymax = ymax
-        this.screenWidth = screenWidth
-        this.screenHeight = screenHeight
-    }
-
-    project(screenX, screenY) {
-        let x = screenX / this.screenWidth * (this.xmax - this.xmin) + this.xmin
-        let y = (height - screenY) / this.screenHeight * (this.ymax - this.ymin) + this.ymin
-        return {x, y}
-    }
-    unproject(gridX, gridY) {
-        let x = (gridX - this.xmin) / (this.xmax - this.xmin) * this.screenWidth
-        let y = this.screenHeight - ((gridY - this.ymin) / (this.ymax - this.ymin) * this.screenHeight)
-        return {x, y}
-    }
-
-    draw(scaleX, scaleY) {
-        stroke(51)
-        for(let x = this.xmin; x <= this.xmax; x += scaleX) {
-            let xDraw = this.unproject(x, 0).x
-            strokeWeight(x == 0 ? 6 : 1);
-            line(xDraw, 0, xDraw, this.screenHeight)
-        }
-        for(let y = this.ymin; y <= this.ymax; y += scaleY) {
-            let yDraw = this.unproject(0, y).y
-            strokeWeight(y == 0 ? 6 : 1)
-            line(0, yDraw, this.screenWidth, yDraw)
-        }
-    }
+function checkAnswer() {
+    let answerValue = select('#answer').value()
+    if(parseFloat(answerValue) == 2) alert('Correct answer!')
+    else alert('Incorrect answer!')
 }

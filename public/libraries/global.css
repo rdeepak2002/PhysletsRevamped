@@ -61,7 +61,17 @@ body {
     fill: #777;
 }
 
-#content {
+.toggleButton {
+	outline: none !important;
+	display: inline-block;
+	margin-right: .7em;
+	font-size: 1.5em;
+	min-width: 120px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+#content, #button-bar {
 	padding-left: 1em;
 	padding-top: 1em;
 }

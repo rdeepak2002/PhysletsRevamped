@@ -3,14 +3,3 @@
 	margin-top: 10px;
 	font-size: 4rem;
 }
-
-.toggleButton{
-	min-width: 120px;
-	outline: none !important;
-	display:inline-block;
-	margin-left: 10px;
-	margin-top: 10px;
-	font-size: 30px;
-	background-color: white;
-	border-radius: 10px;
-}
