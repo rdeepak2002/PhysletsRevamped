@@ -75,7 +75,7 @@ function setup() {
   info = createDiv('What is the velocity of the ball?');
 
 	answer = createDiv(`
-		Enter Answer: <input class="form-control answerInput" id="answer"/> m/s 
+		Enter Answer: <input class="form-control answerInput" id="answer"/> m/s [right]
 		<button class="toggleButton answerSubmitBtn" onClick="checkAnswer()">Submit</button>
 	`);
 
@@ -92,7 +92,7 @@ function checkAnswer() {
 
   if(parseFloat(answerValue) == answer) {
 		$('#modal-title').html("Correct!");
-		$('#modal-body').html("2 meters/second is the correct answer.");
+		$('#modal-body').html("2 m/s is the correct answer. Every 1 second the object moves 2 meters to the right direction.");
   }
 	else {
 		$('#modal-title').html("Incorrect!");
