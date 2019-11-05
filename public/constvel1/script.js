@@ -48,21 +48,21 @@ function setup() {
 
   canvas.parent('canvas-parent');
 
-  skipBackwardButton = createButton('<< Skip');
+  skipBackwardButton = createButton(createIcon('media-step-backward'));
   skipBackwardButton.mousePressed(skipBack);
-  skipBackwardButton.class("toggleButton");
+  skipBackwardButton.class('icon-button action-button')
 
-  playButton = createButton('Pause');
+  playButton = createButton(createIcon('media-pause'));
   playButton.mousePressed(togglePause);
-  playButton.class("toggleButton");
+  playButton.class("icon-button action-button");
 
-  skipForwardButton = createButton('Skip >>');
+  skipForwardButton = createButton(createIcon('media-step-forward'));
   skipForwardButton.mousePressed(skipForward);
-  skipForwardButton.class("toggleButton");
+  skipForwardButton.class('icon-button action-button');
 
-  resetButton = createButton('Reset');
+  resetButton = createButton(createIcon('reload'));
   resetButton.mousePressed(resetCircleObject);
-  resetButton.class("toggleButton");
+  resetButton.class('icon-button action-button');
 
   showXButton = createButton('Hide X');
   showXButton.mousePressed(toggleShowX);
@@ -121,10 +121,10 @@ function togglePause() {
 	pauseAnim = !pauseAnim;
 
 	if(pauseAnim) {
-		playButton.html('Play');
+		playButton.html(createIcon('media-play'));
 	}
 	else {
-		playButton.html('Pause');
+		playButton.html(createIcon('media-pause'));
 	}
 }
 
