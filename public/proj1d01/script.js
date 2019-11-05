@@ -220,7 +220,8 @@ function drawPositionAtMouse() {
 }
 
 function xPositionAtTime(x0, velocity, dt) {
-	return x0+velocity*dt;
+	//return x0+velocity*dt; originally x0+velocity*dt
+	return 0;
 }
 
 function drawGridLines(originX, originY) {
