@@ -72,10 +72,34 @@ function setup() {
   showGhostsButton.mousePressed(toggleGhosts);
   showGhostsButton.class("toggleButton");
 
-  info = createDiv('Find the velocity of the object. Answer: 2 m/s');
+  info = createDiv('What is the velocity of the ball?');
+
+	answer = createDiv(`
+		Enter Answer: <input class="form-control answerInput" id="answer"/> m/s 
+		<button class="toggleButton answerSubmitBtn" onClick="checkAnswer()">Submit</button>
+	`);
+
+	answer.class("answerText");
+
   info.class("info");
 
   frameRate(60);
+}
+
+function checkAnswer() {
+  let answerValue = select('#answer').value();
+  let answer = 2;
+
+  if(parseFloat(answerValue) == answer) {
+		$('#modal-title').html("Correct!");
+		$('#modal-body').html("2 meters/second is the correct answer.");
+  }
+	else {
+		$('#modal-title').html("Incorrect!");
+		$('#modal-body').html("Try using the 'show ghosts' button to determine where the object is after every 1 second.");
+	}
+
+	$('#answerModal').modal('toggle');
 }
 
 function skipBack() {
