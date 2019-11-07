@@ -8,9 +8,9 @@ let curTime = 0;
 let dt = 0;
 
 // scale of all objects
-let xWidth = 15;
-let yWidth = 6;
-let objScale = window.innerWidth/xWidth;
+let xWidth = 10;
+let yWidth = 18;
+let objScale = window.innerHeight/yWidth;
 
 // canvas width and height
 let canvasWidth = xWidth*objScale;
@@ -18,8 +18,10 @@ let canvasHeight = yWidth*objScale;
 
 // initial circle variables
 let xInit = 3*objScale;
-let yInit = 3*objScale;
+let yInit = 15*objScale;
 let radiusInit = 0.5*objScale;
+
+let yVelocityInit = 2*objScale;
 
 // displayVariables
 let pauseAnim = false;
@@ -29,14 +31,21 @@ let showGhosts = false;
 // circle object
 let circle = {};
 
+// hammer image
+let img;
+
 // html elements
 let playButton, skipBackwardButton, skipForwardButton, resetButton, showXButton, showGhostsButton, info, answer;
+
+function preload() {
+	img = loadImage('../images/hammer.png');
+}
 
 function setup() {
 	initialTime = Date.now();
 	curTime = Date.now();
 
-	circle = {x: xInit, y: yInit, radius: radiusInit};
+	circle = {x: xInit, y: yInit, radius: radiusInit, xVelocity: 0, yVelocity: yVelocityInit, xOffset: -6, yOffset: 3};
 
 	let canvas = createCanvas(canvasWidth, canvasHeight)
 		.parent('canvas-parent');
@@ -71,11 +80,11 @@ function setup() {
 		.class("toggleButton")
 		.mousePressed(toggleGhosts);
 
-	info = createDiv('What is the velocity of the ball?')
+	info = createDiv('What is the initial velocity of the ball?')
 		.parent('content');
 
 	answer = createDiv(`
-			Enter Answer: <input class="form-control answerInput" id="answer"/> m/s [right]
+			Enter Answer: <input class="form-control answerInput" id="answer"/> m/s [up]
 			<button class="toggleButton answerSubmitBtn" onClick="checkAnswer()">Submit</button>
 		`)
 		.class("answerText")
@@ -93,11 +102,11 @@ function checkAnswer() {
 
 	if(parseInt(answerValue) === answerNumber) {
 		$('#modal-title').html("Correct!");
-		$('#modal-body').html("2 m/s is the correct answer. Every 1 second the object moves 2 meters to the right direction.");
+		$('#modal-body').html("2 m/s [up] is the correct answer. Acceleration due to gravity (-9.81 m/s²) causes this velocity to change over time.");
 	}
 	else {
 		$('#modal-title').html("Incorrect!");
-		$('#modal-body').html("Try using the 'show ghosts' button to determine where the object is after every 1 second.");
+		$('#modal-body').html("Try using the 'show ghosts' button to determine where the object is after every 1 second. Also analyze the maximum height reached by the hammer (gravity is the only force causing acceleration).");
 	}
 
 	$('#answerModal').modal('toggle');
@@ -108,8 +117,13 @@ function skipBack() {
 	if(pauseAnim)
 	{
 		dt -= skipTime;
-		circle.x = xPositionAtTime(xInit, 2*objScale, dt);
-		if(circle.x < xPositionAtTime(xInit, 2*objScale, 0)) {
+		circle.x = xPositionAtTime(xInit, circle.xVelocity, dt);
+		if(circle.x < xPositionAtTime(xInit, circle.xVelocity, 0)) {
+			resetCircleObject();
+		}
+
+		circle.y = yPositionAtTime(yInit, yVelocityInit, dt);
+		if(circle.y > yPositionAtTime(yInit, yVelocityInit, 0)) {
 			resetCircleObject();
 		}
 	}
@@ -121,11 +135,8 @@ function skipForward() {
 	let skipTime = 0.1;
 	if(pauseAnim) {
 		dt += skipTime;
-		circle.x = xPositionAtTime(xInit, 2*objScale, dt);
-		if(circle.x > xPositionAtTime(xInit, 2*objScale, 6.0)) {
-			circle.x = xPositionAtTime(xInit, 2*objScale, 6.0);
-			dt = 6.0;
-		}
+
+		circle.y = yPositionAtTime(yInit, yVelocityInit, dt);
 	}
 	else
 		initialTime -= skipTime*1000;
@@ -174,10 +185,11 @@ function draw() {
 	}
 	else {
 		dt = (curTime-initialTime)/1000;
-		circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+		circle.x = xPositionAtTime(xInit, circle.xVelocity, dt);
+		circle.y = yPositionAtTime(yInit, yVelocityInit, dt);
 	}
 
-	drawGridLines(6, 3);
+	drawGridLines(5, 15);
 	drawCircleObject();
 
 	if(showGhosts) {
@@ -201,18 +213,17 @@ function drawGhosts() {
 	strokeWeight(0);
 	fill(255, 100, 100, 70);
 
-	for(var i = 0; i < 8; i++) {
-		let ghostX = xPositionAtTime(xInit, 2*objScale, i);
+	for(var i = 0; i < 12; i++) {
+		let ghostY = yPositionAtTime(yInit, yVelocityInit, i);
 
-		if(ghostX < circle.x) {
-			ellipse(ghostX, circle.y, circle.radius, circle.radius);
-		}
+		if(circle.y < ghostY)
+			ellipse(circle.x, ghostY, circle.radius, circle.radius);
 	}
 }
 
 function drawPositionAtMouse() {
-	let x = (-6+(mouseX/objScale)).toFixed(2);			// to make start x at -3
-	let y = (3+-1*(mouseY/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
+	let x = (1+circle.xOffset+(mouseX/objScale)).toFixed(2);			// to make start x at -3
+	let y = (12+circle.yOffset+-1*(mouseY/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
 
 	if(mouseX != 0 && mouseY !=0) {
 		stroke(51);
@@ -223,12 +234,18 @@ function drawPositionAtMouse() {
 	}
 }
 
-function xPositionAtTime(x0, velocity, dt) {
-	return x0+velocity*dt;
+function xPositionAtTime(x0, xVelocity, dt) {
+	return x0+xVelocity*dt;
+}
+
+function yPositionAtTime(y0, yVelInit, dt) {
+	//console.log(yInit + " , -" + (yVelocityInit*dt).toFixed(2) + ", " + (9.8*0.5*Math.pow(dt, 2)).toFixed(2));
+	return yInit - yVelocityInit*dt + 9.8*0.5*Math.pow(dt, 2);
+	//return y0-0.5*9.81*Math.pow(dt, 2) + yVelInit*dt;
 }
 
 function drawGridLines(originX, originY) {
-	for(let i = 0; i < canvasWidth; i+=objScale) {
+	for(let i = 0; i <= canvasWidth; i+=objScale) {
 		if(Math.round(i) === Math.round(originX*objScale)) {
 			strokeWeight(6);
 			stroke(51);
@@ -261,16 +278,21 @@ function drawCircleObject() {
 		resetCircleObject();
 	}
 
+	if(circle.y > yInit) {	// reset position if at max width of screen
+		resetCircleObject();
+	}
+
 	if(showX) {
 		textSize(32);
-		let x = (-6+(circle.x/objScale)).toFixed(2);			// to make start x at -3
-		let y = (3+-1*(circle.y/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
+		let x = (1+circle.xOffset+(circle.x/objScale)).toFixed(2);			// to make start x at -3
+		let y = (12+circle.yOffset+-1*(circle.y/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
 		fill(0, 0, 0);
 		text("(" + x + ", " + y + ")", circle.x-circle.radius*1.6, circle.y-circle.radius);
 	}
 
 	fill(255, 100, 100);
-	ellipse(circle.x, circle.y, circle.radius, circle.radius);
+	//ellipse(circle.x, circle.y, circle.radius, circle.radius);
+	image(img, circle.x-circle.radius, circle.y-circle.radius, circle.radius*2, circle.radius*2);
 }
 
 function resetCircleObject() {
