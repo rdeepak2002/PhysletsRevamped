@@ -1,99 +1,100 @@
 $(function(){
-  $("#nav-placeholder").load("/navbar/navbar.html");
+	$("#nav-placeholder").load("/navbar/navbar.html");
 });
 
 // inital time variable
-var initialTime = 0;
-var curTime = 0;
-var dt = 0;
+let initialTime = 0;
+let curTime = 0;
+let dt = 0;
 
 // scale of all objects
-var xWidth = 15;
-var yWidth = 6;
-var objScale = window.innerWidth/xWidth;
+let xWidth = 15;
+let yWidth = 6;
+let objScale = window.innerWidth/xWidth;
 
 // canvas width and height
-var canvasWidth = xWidth*objScale;
-var canvasHeight = yWidth*objScale;
+let canvasWidth = xWidth*objScale;
+let canvasHeight = yWidth*objScale;
 
 // initial circle variables
-var xInit = 3*objScale;
-var yInit = 3*objScale;
-var radiusInit = 0.5*objScale;
+let xInit = 3*objScale;
+let yInit = 3*objScale;
+let radiusInit = 0.5*objScale;
 
 // displayVariables
-var pauseAnim = false;
-var showX = true;
-var showGhosts = false;
+let pauseAnim = false;
+let showX = true;
+let showGhosts = false;
 
 // circle object
-var circle = {};
+let circle = {};
 
 // html elements
-var playButton;
-var skipBackwardButton;
-var skipForwardButton;
-var resetButton;
-var showXButton;
-var showGhostsButton;
-var info;
+let playButton, skipBackwardButton, skipForwardButton, resetButton, showXButton, showGhostsButton, info, answer;
 
 function setup() {
-  initialTime = Date.now();
-  curTime = Date.now();
+	initialTime = Date.now();
+	curTime = Date.now();
 
-  circle = {x: xInit, y: yInit, radius: radiusInit};
+	circle = {x: xInit, y: yInit, radius: radiusInit};
 
-  let canvas = createCanvas(canvasWidth, canvasHeight);
+	let canvas = createCanvas(canvasWidth, canvasHeight)
+		.parent('canvas-parent');
 
-  canvas.parent('canvas-parent');
+	skipBackwardButton = createButton(createIcon('media-step-backward'))
+		.parent('button-bar')
+		.class('icon-button action-button')
+		.mousePressed(skipBack);
 
-  skipBackwardButton = createButton(createIcon('media-step-backward'));
-  skipBackwardButton.mousePressed(skipBack);
-  skipBackwardButton.class('icon-button action-button')
+	playButton = createButton(createIcon('media-pause'))
+		.parent('button-bar')
+		.class("icon-button action-button")
+		.mousePressed(togglePause);
 
-  playButton = createButton(createIcon('media-pause'));
-  playButton.mousePressed(togglePause);
-  playButton.class("icon-button action-button");
+	skipForwardButton = createButton(createIcon('media-step-forward'))
+		.parent('button-bar')
+		.class('icon-button action-button')
+		.mousePressed(skipForward);
 
-  skipForwardButton = createButton(createIcon('media-step-forward'));
-  skipForwardButton.mousePressed(skipForward);
-  skipForwardButton.class('icon-button action-button');
+	resetButton = createButton(createIcon('reload'))
+		.parent('button-bar')
+		.class('icon-button action-button')
+		.mousePressed(resetCircleObject);
 
-  resetButton = createButton(createIcon('reload'));
-  resetButton.mousePressed(resetCircleObject);
-  resetButton.class('icon-button action-button');
+	showXButton = createButton('Hide X')
+		.parent('button-bar')
+		.class("toggleButton")
+		.mousePressed(toggleShowX);
 
-  showXButton = createButton('Hide X');
-  showXButton.mousePressed(toggleShowX);
-  showXButton.class("toggleButton");
+	showGhostsButton = createButton('Show Ghosts')
+		.parent('button-bar')
+		.class("toggleButton")
+		.mousePressed(toggleGhosts);
 
-  showGhostsButton = createButton('Show Ghosts');
-  showGhostsButton.mousePressed(toggleGhosts);
-  showGhostsButton.class("toggleButton");
-
-  info = createDiv('What is the velocity of the ball?');
+	info = createDiv('What is the velocity of the ball?')
+		.parent('content');
 
 	answer = createDiv(`
-		Enter Answer: <input class="form-control answerInput" id="answer"/> m/s [right]
-		<button class="toggleButton answerSubmitBtn" onClick="checkAnswer()">Submit</button>
-	`);
+			Enter Answer: <input class="form-control answerInput" id="answer"/> m/s [right]
+			<button class="toggleButton answerSubmitBtn" onClick="checkAnswer()">Submit</button>
+		`)
+		.class("answerText")
+		.parent('content');
 
-	answer.class("answerText");
 
-  info.class("info");
+	info.class("info");
 
-  frameRate(60);
+	frameRate(60);
 }
 
 function checkAnswer() {
-  let answerValue = select('#answer').value();
-  let answer = 2;
+	let answerValue = select('#answer').value();
+	let answerNumber = 2;
 
-  if(parseFloat(answerValue) == answer) {
+	if(parseInt(answerValue) === answerNumber) {
 		$('#modal-title').html("Correct!");
 		$('#modal-body').html("2 m/s is the correct answer. Every 1 second the object moves 2 meters to the right direction.");
-  }
+	}
 	else {
 		$('#modal-title').html("Incorrect!");
 		$('#modal-body').html("Try using the 'show ghosts' button to determine where the object is after every 1 second.");
@@ -164,25 +165,27 @@ function toggleShowX() {
 }
 
 function draw() {
-  clear();
+	clear();
 
-  curTime = Date.now();
+	curTime = Date.now();
 
-  if(pauseAnim) {
-  	initialTime = curTime - dt*1000;
-  }
-  else {
-	  dt = (curTime-initialTime)/1000;
-	  circle.x = xPositionAtTime(xInit, 2*objScale, dt);
-  }
-
-  drawGridLines(6, 3);
-	drawCircleObject();
-	if(showGhosts) {
-  	drawGhosts();
+	if(pauseAnim) {
+		initialTime = curTime - dt*1000;
 	}
-  drawPositionAtMouse();
-  drawTime();
+	else {
+		dt = (curTime-initialTime)/1000;
+		circle.x = xPositionAtTime(xInit, 2*objScale, dt);
+	}
+
+	drawGridLines(6, 3);
+	drawCircleObject();
+
+	if(showGhosts) {
+		drawGhosts();
+	}
+
+	drawPositionAtMouse();
+	drawTime();
 }
 
 
@@ -208,12 +211,13 @@ function drawGhosts() {
 }
 
 function drawPositionAtMouse() {
-	stroke(51);
-	strokeWeight(1);
-	textSize(32);
 	let x = (-6+(mouseX/objScale)).toFixed(2);			// to make start x at -3
 	let y = (3+-1*(mouseY/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
+
 	if(mouseX != 0 && mouseY !=0) {
+		stroke(51);
+		strokeWeight(1);
+		textSize(32);
 		fill(100, 100, 255);
 		text("(" + x + ", " + y + ")", mouseX, mouseY);
 	}	
@@ -224,56 +228,57 @@ function xPositionAtTime(x0, velocity, dt) {
 }
 
 function drawGridLines(originX, originY) {
-  for(var i = 0; i < canvasWidth; i+=objScale) {
-  	if(Math.round(i) == Math.round(originX*objScale)) {
-  		strokeWeight(6);
+	for(let i = 0; i < canvasWidth; i+=objScale) {
+		if(Math.round(i) === Math.round(originX*objScale)) {
+			strokeWeight(6);
 			stroke(51);
-  	}
-  	else {
-  		strokeWeight(1);
+		}
+		else {
+			strokeWeight(1);
 			stroke(51);
-  	}
-	  line(i, 0, i, canvasHeight);
-  }
+		}
+		line(i, 0, i, canvasHeight);
+	}
 
-  for(var i = 0; i < canvasHeight; i+=objScale) {
-  	if(Math.round(i) == Math.round(originY*objScale)) {
-  		strokeWeight(6);
+	for(let i = 0; i < canvasHeight; i+=objScale) {
+		if(Math.round(i) === Math.round(originY*objScale)) {
+			strokeWeight(6);
 			stroke(51);
-  	}
-  	else {
-  		strokeWeight(1);
+		}
+		else {
+			strokeWeight(1);
 			stroke(51);
-  	}
-	  line(0, i, canvasWidth, i);
-  }
+		}
+		line(0, i, canvasWidth, i);
+	}
 }
 
 function drawCircleObject() {
 	stroke(51);
 	strokeWeight(1);
-  if(circle.x > canvasWidth) {	// reset position if at max width of screen
-  	resetCircleObject();
-  }
 
-  if(showX) {
+	if(circle.x > canvasWidth) {	// reset position if at max width of screen
+		resetCircleObject();
+	}
+
+	if(showX) {
   		textSize(32);
-			let x = (-6+(circle.x/objScale)).toFixed(2);			// to make start x at -3
-			let y = (3+-1*(circle.y/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
-			fill(0, 0, 0);
-			text("(" + x + ", " + y + ")", circle.x-circle.radius*1.6, circle.y-circle.radius);
-  }
+		let x = (-6+(circle.x/objScale)).toFixed(2);			// to make start x at -3
+		let y = (3+-1*(circle.y/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
+		fill(0, 0, 0);
+		text("(" + x + ", " + y + ")", circle.x-circle.radius*1.6, circle.y-circle.radius);
+	}
 
 	fill(255, 100, 100);
-  ellipse(circle.x, circle.y, circle.radius, circle.radius);
+	ellipse(circle.x, circle.y, circle.radius, circle.radius);
 }
 
 function resetCircleObject() {
 	circle.x = xInit;
 	circle.y = yInit;
-  initialTime = Date.now();
-  curTime = Date.now();
-  dt = 0;
+	initialTime = Date.now();
+	curTime = Date.now();
+	dt = 0;
 }
 
 function getTruePosition(position) {
