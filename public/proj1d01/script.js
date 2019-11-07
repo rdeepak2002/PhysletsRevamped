@@ -21,7 +21,7 @@ let xInit = 3*objScale;
 let yInit = 15*objScale;
 let radiusInit = 0.5*objScale;
 
-let yVelocityInit = 1.91*objScale;
+let yVelocityInit = 15;
 
 // displayVariables
 let pauseAnim = false;
@@ -98,11 +98,11 @@ function setup() {
 
 function checkAnswer() {
 	let answerValue = select('#answer').value();
-	let answerNumber = 2;
+	let answerNumber = 15;
 
 	if(parseInt(answerValue) === answerNumber) {
 		$('#modal-title').html("Correct!");
-		$('#modal-body').html("2 m/s [up] is the correct answer. Acceleration due to gravity (-9.81 m/s²) causes this velocity to change over time.");
+		$('#modal-body').html("15 m/s [up] is the correct answer. Acceleration due to gravity (-9.81 m/s²) causes this velocity to change over time.");
 	}
 	else {
 		$('#modal-title').html("Incorrect!");
@@ -122,8 +122,8 @@ function skipBack() {
 			resetCircleObject();
 		}
 
-		circle.y = yPositionAtTime(yInit, yVelocityInit, dt);
-		if(circle.y > yPositionAtTime(yInit, yVelocityInit, 0)) {
+		circle.y = yPositionAtTime(yInit, yVelocityInit*objScale, dt);
+		if(circle.y > yPositionAtTime(yInit, yVelocityInit*objScale, 0)) {
 			resetCircleObject();
 		}
 	}
@@ -136,7 +136,7 @@ function skipForward() {
 	if(pauseAnim) {
 		dt += skipTime;
 
-		circle.y = yPositionAtTime(yInit, yVelocityInit, dt);
+		circle.y = yPositionAtTime(yInit, yVelocityInit*objScale, dt);
 	}
 	else
 		initialTime -= skipTime*1000;
@@ -186,7 +186,7 @@ function draw() {
 	else {
 		dt = (curTime-initialTime)/1000;
 		circle.x = xPositionAtTime(xInit, circle.xVelocity, dt);
-		circle.y = yPositionAtTime(yInit, yVelocityInit, dt);
+		circle.y = yPositionAtTime(yInit, yVelocityInit*objScale, dt);
 	}
 
 	drawGridLines(5, 15);
@@ -214,7 +214,8 @@ function drawGhosts() {
 	fill(255, 100, 100, 70);
 
 	for(var i = 0; i < 12; i++) {
-		let ghostY = yPositionAtTime(yInit, yVelocityInit, i);
+		//let ghostY = yPositionAtTime(yInit, yVelocityInit*objScale, i);
+		let ghostY = yPositionAtTime(yInit, yVelocityInit*objScale, i);
 
 		if(circle.y < ghostY)
 			ellipse(circle.x, ghostY, circle.radius, circle.radius);
@@ -239,9 +240,7 @@ function xPositionAtTime(x0, xVelocity, dt) {
 }
 
 function yPositionAtTime(y0, yVelInit, dt) {
-	//console.log(yInit + " , -" + (yVelocityInit*dt).toFixed(2) + ", " + (9.8*0.5*Math.pow(dt, 2)).toFixed(2));
-	return yInit - yVelocityInit*dt + 9.8*0.5*Math.pow(dt, 2);
-	//return y0-0.5*9.81*Math.pow(dt, 2) + yVelInit*dt;
+	return yInit - yVelInit*dt + 9.8*0.5*Math.pow(dt, 2)*objScale;
 }
 
 function drawGridLines(originX, originY) {
