@@ -214,7 +214,7 @@ function drawPositionAtMouse() {
 	let x = (-6+(mouseX/objScale)).toFixed(2);			// to make start x at -3
 	let y = (3+-1*(mouseY/objScale)).toFixed(2);		// to make start y at 0 and yscale flipped
 
-	if(mouseX !== 0 && mouseY !==0) {
+	if(mouseX != 0 && mouseY !=0) {
 		stroke(51);
 		strokeWeight(1);
 		textSize(32);
