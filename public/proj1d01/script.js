@@ -21,7 +21,7 @@ let xInit = 3*objScale;
 let yInit = 15*objScale;
 let radiusInit = 0.5*objScale;
 
-let yVelocityInit = 2*objScale;
+let yVelocityInit = 1.91*objScale;
 
 // displayVariables
 let pauseAnim = false;
