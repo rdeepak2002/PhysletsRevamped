@@ -17,6 +17,9 @@ class Grid {
         this.screenHeight = screenHeight
     }
 
+    getHeight() {
+        return this.screenHeight
+    }
     project(screenX, screenY) {
         let x = screenX / this.screenWidth * (this.xmax - this.xmin) + this.xmin
         let y = (height - screenY) / this.screenHeight * (this.ymax - this.ymin) + this.ymin

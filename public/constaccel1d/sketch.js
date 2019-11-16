@@ -13,8 +13,30 @@ let isPlaying, showX, showGhosts
 const size = 40
 
 function setup() {
-    let canvas = createCanvas(window.innerWidth*.7, window.innerHeight*.7)
+    const myWidth = window.innerWidth*.65
+    grid = new Grid(-4, 10, -3, 3, myWidth)
+    let canvas = createCanvas(myWidth, grid.getHeight())
     canvas.parent('canvas-parent')
+
+    playButton = createButton(createIcon('media-pause'))
+        .mousePressed(() => {
+            isPlaying = !isPlaying
+            playButton.html(createIcon(isPlaying ? 'media-pause' : 'media-play'))
+        })
+        .class('icon-button action-button')
+        .parent('button-bar')
+    stepLeftButton = createButton(createIcon('media-step-backward'))
+        .mousePressed(() => time = Math.max(0, time - .1))
+        .class('icon-button action-button')
+        .parent('button-bar')
+    stepRightButton = createButton(createIcon('media-step-forward'))
+        .mousePressed(() => time += .1)
+        .class('icon-button action-button')
+        .parent('button-bar')
+    resetButton = createButton(createIcon('reload'))
+        .mousePressed(() => time = 0)
+        .class('icon-button action-button')
+        .parent('button-bar')
 
     xButton = createButton('Show X')
         .mousePressed(() => {
@@ -31,25 +53,6 @@ function setup() {
         .parent('button-bar')
         .class('toggleButton')
 
-    playButton = createButton(createIcon('media-pause'))
-        .mousePressed(() => {
-            isPlaying = !isPlaying
-            playButton.html(createIcon(isPlaying ? 'media-pause' : 'media-play'))
-        })
-        .class('icon-button action-button')
-        .parent('content')
-    stepLeftButton = createButton(createIcon('media-step-backward'))
-        .mousePressed(() => time = Math.max(0, time - .1))
-        .class('icon-button action-button')
-        .parent('content')
-    stepRightButton = createButton(createIcon('media-step-forward'))
-        .mousePressed(() => time += .1)
-        .class('icon-button action-button')
-        .parent('content')
-    resetButton = createButton(createIcon('reload'))
-        .mousePressed(() => time = 0)
-        .class('icon-button action-button')
-        .parent('content')
 
     info = createDiv(`
         <h1>Description</h1> A ball moves across the screen with an increasing velocity.
@@ -62,7 +65,6 @@ function setup() {
         <button class="toggleButton" onClick="checkAnswer()">Submit</button>
     `).parent('content')
 
-    grid = new Grid(-4, 10, -3, 3, width)
     isPlaying = true
     showX = false
     time = 0
