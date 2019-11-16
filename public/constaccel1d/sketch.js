@@ -8,7 +8,7 @@ let time
 let info
 let playButton, stepLeftButton, stepRightButton, resetButton
 let xButton, vButton, ghostButton, answerButton
-let isPlaying, showX, showGhosts
+let isPlaying, showX, showV, showGhosts
 
 const size = 40
 
@@ -41,7 +41,22 @@ function setup() {
     xButton = createButton('Show X')
         .mousePressed(() => {
             showX = !showX
+            if(showX) {
+                showV = false
+                vButton.html('Show V')
+            }
             xButton.html(showX ? 'Hide X' : 'Show X')
+        })
+        .parent('button-bar')
+        .class('toggleButton')
+    vButton = createButton('Show V')
+        .mousePressed(() => {
+            showV = !showV
+            if(showV) {
+                showX = false
+                xButton.html('Show X')
+            }
+            vButton.html(showV ? 'Hide V' : 'Show V')
         })
         .parent('button-bar')
         .class('toggleButton')
@@ -86,6 +101,7 @@ function draw() {
     text(`Time: ${time.toFixed(2)} seconds`, 10, 30)
     
     const posX = pos(time)
+    const velX = vel(time)
     if(showGhosts) {
         for(let i = 0; i < 4; i += 1) {
             if(posX >= pos(i)) {
@@ -102,7 +118,8 @@ function draw() {
     stroke(0)
     ellipse(circle.x, circle.y, size, size)
     fill(0)
-    if(showX) text(`(${posX.toFixed(2)}, 0)`, circle.x - size/2, circle.y - 40) 
+    if(showX) text(`(${posX.toFixed(2)}, 0)`, circle.x - size/2, circle.y - 40)
+    if(showV) text(`(${velX.toFixed(2)}, 0)`, circle.x - size/2, circle.y - 40) 
     if(posX > grid.xmax + 1.5) time = 0
     if(isPlaying) time += .02
 }
